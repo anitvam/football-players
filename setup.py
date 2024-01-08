@@ -59,7 +59,7 @@ class GetVersionCommand(distutils.cmd.Command):
 
 
 setup(
-    name='fp',  # Required
+    name='anitvam-fp',  # Required
     version=version,
     description='Application example showing Internazionale football players using tkinter and cURL',
     license='Apache 2.0 License',

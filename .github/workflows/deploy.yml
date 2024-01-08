@@ -5,6 +5,15 @@ on:
       - master
       - main
       - develop
+    branches-ignore:
+      - 'dependabot/**'
+    paths-ignore:
+      - '.gitignore'
+      - '.mergify.yml'
+      - 'CHANGELOG.md'
+      - 'LICENSE'
+      - 'README.md'
+      - 'renovate.json'
   workflow_dispatch:
 env:
   PROJECT_NAME: football-players
