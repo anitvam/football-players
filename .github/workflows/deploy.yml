@@ -48,8 +48,20 @@ jobs:
           TWINE_USERNAME: ${{ secrets.PYPI_USERNAME }}
           TWINE_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
 
-      - name: Release using Conventional Commit Semantic Versioning
-        uses: anitvam/conventionalcommit-semantic-releasing@v0.7.2
-        with:
-          assets-path: "dist/**"
-          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Get Version
+        id: get-version
+        run: echo "version=$(python setup.py get_project_version | tail -n 1)" >> $GITHUB_OUTPUT
+
+      - name: Release Assets
+        id: upload-release-assets
+        run: |
+          set -x
+          ASSETS=()
+          for A in dist/*; do
+            ASSETS+=("-a" "$A")
+            echo "Releasing $A"
+          done
+          RELEASE_TAG='${{ steps.get-version.outputs.version }}'
+          hub release create "${ASSETS[@]}" -m "$RELEASE_TAG" "$RELEASE_TAG"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
