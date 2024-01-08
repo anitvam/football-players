@@ -1,0 +1,48 @@
+name: deploy
+on:
+  workflow_run:
+    branches:
+      - master
+      - main
+      - develop
+  workflow_dispatch:
+env:
+  PROJECT_NAME: football-players
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    name: Deploy on PyPI and create release
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # all history
+
+      - name: Get All Tags
+        run: git fetch --tags -f
+
+      - name: Get Python Version
+        id: get-python-version
+        run: echo "version=$(cat .python-version)" >> $GITHUB_OUTPUT
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ steps.get-python-version.outputs.version }}
+
+      - name: Restore Python dependencies
+        run: pip install -r requirements.txt
+
+      - name: Pack
+        run: python -m build
+
+      - name: Upload
+        run: python -m twine upload dist/*
+        env:
+          TWINE_USERNAME: ${{ secrets.PYPI_USERNAME }}
+          TWINE_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
+
+      - name: Release using Conventional Commit Semantic Versioning
+        uses: anitvam/conventionalcommit-semantic-releasing@v0.7.2
+        with:
+          assets-path: "dist/**"
