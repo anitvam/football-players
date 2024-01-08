@@ -52,3 +52,4 @@ jobs:
         uses: anitvam/conventionalcommit-semantic-releasing@v0.7.2
         with:
           assets-path: "dist/**"
+          token: ${{ secrets.GITHUB_TOKEN }}
