@@ -3,7 +3,7 @@ import pathlib
 
 setup(
     name='fopl',  # Required
-    version='0.0.2',
+    version='0.0.3',
     description='Application example showing Internazionale football players using tkinter and cURL',
     license='Apache 2.0 License',
     author='Martina Baiardi',
